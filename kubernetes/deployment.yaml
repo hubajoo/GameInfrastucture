@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gameServer-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gameServer-deployment
+  template:
+    metadata:
+      labels:
+        app: gameServer-deployment
+    spec:
+      containers:
+        - name: gameServer-deployment
+          image: joohuba/huba-game-server:latest
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8090
