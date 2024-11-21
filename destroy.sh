@@ -8,4 +8,4 @@ kubectl apply -f kubernetes/ingress.yaml
 kubectl apply -f kubernetes/ingress.yaml 
 
 cd terraform_cluster || terraform destroy -auto-approve
-echo "Infrastructure successfully."
+echo "Infrastructure deleted successfully."
