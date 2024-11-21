@@ -34,23 +34,15 @@ resource "aws_eks_node_group" "this" {
 
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "huba-eks-tf-nodegroup"
-  #node_group_name_prefix = "huba-eks-tf-node-"
   node_role_arn = aws_iam_role.nodes.arn
 
   subnet_ids = [
     aws_subnet.public-a.id,
-    #aws_subnet.private-a.id,
     aws_subnet.public-b.id,
-    #aws_subnet.private-b.id,
   ]
 
   capacity_type  = "ON_DEMAND"
   instance_types = ["t3.micro"]
-
-  #launch_template {
-  #  name    = aws_launch_template.this.name
-  #  version = aws_launch_template.this.latest_version
-  #}
 
   scaling_config {
     desired_size = 2
@@ -58,33 +50,12 @@ resource "aws_eks_node_group" "this" {
     min_size     = 2
   }
 
-
-  #labels = {
-  #  node = "kubenode"
-  #}
-
   depends_on = [
     aws_iam_role_policy_attachment.nodes-AmazonEKSWorkerNodePolicy,
     aws_iam_role_policy_attachment.nodes-AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.nodes-AmazonEC2ContainerRegistryReadOnly,
-    # aws_launch_template.this
   ]
 }
-/*
-resource "aws_launch_template" "this" {
-  name                   = "sg_launch_template"
-  instance_type          = "t3.micro"
-  image_id               = "ami-050ff05588602f72b"
-  ebs_optimized          = true
-  vpc_security_group_ids = [aws_security_group.allow_http.id]
-
-  #security_group_names   = [ aws_security_group.allow_http.name ]
-
-  monitoring {
-    enabled = true
-  }
-}
-*/
 
 ## autoscaler
 

@@ -1,19 +1,19 @@
-apiVersion: apps/v1
+apiVersion: v1
 kind: Deployment
 metadata:
-  name: gameServer-deployment
+  name: gameserver-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gameServer-deployment
+      app: gameserver-deployment
   template:
     metadata:
       labels:
-        app: gameServer-deployment
+        app: gameserver-deployment
     spec:
       containers:
-        - name: gameServer-deployment
+        - name: gameserver-deployment
           image: joohuba/huba-game-server:latest
           resources:
             limits:

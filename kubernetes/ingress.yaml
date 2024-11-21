@@ -6,13 +6,13 @@ metadata:
     name: ingress
 spec:
   rules:
-    - host: gameServer
+    - host: gameserver
       http:
         paths:
           - pathType: Prefix
             path: "/*"
             backend:
               service:
-                name: gameServer-depl-service
+                name: gameserver-depl-service
                 port:
                   number: 80

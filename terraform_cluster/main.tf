@@ -10,9 +10,7 @@ resource "aws_eks_cluster" "this" {
   vpc_config {
     subnet_ids = [
       aws_subnet.public-a.id,
-      #aws_subnet.private-a.id,
       aws_subnet.public-b.id,
-      #aws_subnet.private-b.id,
     ]
   }
   role_arn = aws_iam_role.cluster.arn

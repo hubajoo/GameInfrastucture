@@ -36,78 +36,7 @@ resource "aws_route_table" "public" {
     Name = "public"
   }
 }
-/*
-resource "aws_network_acl" "this" {
-  vpc_id = aws_vpc.this.id
 
-  
-  tags = {
-    Name = "acl_allow_tcp"
-  }
-}
-resource "aws_network_acl_rule" "ssh-egress" {
- network_acl_id = aws_network_acl.this.id
-  rule_number    = 400
-  egress         = true
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = aws_vpc.this.cidr_block
-  from_port      = 22
-  to_port        = 22
-}
-
-resource "aws_network_acl_rule" "ssh-ingress" {
- network_acl_id = aws_network_acl.this.id
-  rule_number    = 300
-  egress         = false
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = aws_vpc.this.cidr_block
-  from_port      = 22
-  to_port        = 22
-}
-
-
-resource "aws_network_acl_rule" "http-egress" {
-  network_acl_id = aws_network_acl.this.id
-  rule_number    = 200
-  egress         = true
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = aws_vpc.this.cidr_block
-  from_port      = 80
-  to_port        = 80
-}
-
-resource "aws_network_acl_rule" "http-ingress" {
-   network_acl_id = aws_network_acl.this.id
-  rule_number    = 100
-  egress         = false
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = aws_vpc.this.cidr_block
-  from_port      = 80
-  to_port        = 80
-}
-*/
-/*
-resource "aws_subnet" "private-a" {
-
-  vpc_id            = aws_vpc.this.id
-  cidr_block        = "10.0.0.0/19"
-  availability_zone = "eu-central-1a"
-  #map_public_ip_on_launch = true
-  tags = {
-    Name                              = "huba-tf-cluster-private-subnet-1a"
-    "kubernetes.io/role/internal-elb" = "1"
-    "kubernetes.io/cluster/huba-eks-tf-cluster"      = "owned"
-  }
-}
-resource "aws_route_table_association" "private-a" {
-  subnet_id      = aws_subnet.private-a.id
-  route_table_id = aws_route_table.private.id
-}
-*/
 resource "aws_subnet" "public-a" {
 
   vpc_id                  = aws_vpc.this.id
@@ -125,25 +54,7 @@ resource "aws_route_table_association" "public-a" {
   subnet_id      = aws_subnet.public-a.id
   route_table_id = aws_route_table.public.id
 }
-/*
-resource "aws_subnet" "private-b" {
 
-  vpc_id            = aws_vpc.this.id
-  availability_zone = "eu-central-1b"
-  cidr_block        = "10.0.64.0/19"
-  #map_public_ip_on_launch = true
-
-  tags = {
-    Name                              = "huba-tf-cluster-private-subnet-1b"
-    "kubernetes.io/role/internal-elb" = "1"
-    "kubernetes.io/cluster/huba-eks-tf-cluster"      = "owned"
-  }
-}
-resource "aws_route_table_association" "private-b" {
-  subnet_id      = aws_subnet.private-b.id
-  route_table_id = aws_route_table.private.id
-}
-*/
 resource "aws_subnet" "public-b" {
 
   vpc_id                  = aws_vpc.this.id
@@ -175,7 +86,6 @@ resource "aws_security_group" "allow_http" {
 resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   security_group_id = aws_security_group.allow_http.id
 
-  #cidr_ipv4         = aws_vpc.this.cidr_block
   cidr_ipv4   = "0.0.0.0/0"
   from_port   = 80
   ip_protocol = "tcp"
@@ -186,7 +96,6 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
   security_group_id = aws_security_group.allow_http.id
 
   cidr_ipv4 = aws_vpc.this.cidr_block
-  #cidr_ipv4         = "0.0.0.0/0"
   from_port   = 22
   ip_protocol = "tcp"
   to_port     = 22
@@ -196,7 +105,6 @@ resource "aws_vpc_security_group_ingress_rule" "allow_kubelet_api" {
   security_group_id = aws_security_group.allow_http.id
 
   cidr_ipv4 = aws_vpc.this.cidr_block
-  #cidr_ipv4         = "0.0.0.0/0"
   from_port   = 10250
   ip_protocol = "tcp"
   to_port     = 10250
@@ -206,7 +114,6 @@ resource "aws_vpc_security_group_ingress_rule" "allow_kube-proxy" {
   security_group_id = aws_security_group.allow_http.id
 
   cidr_ipv4 = aws_vpc.this.cidr_block
-  #cidr_ipv4         = "0.0.0.0/0"
   from_port   = 10256
   ip_protocol = "tcp"
   to_port     = 10256
