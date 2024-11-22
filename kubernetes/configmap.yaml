@@ -4,3 +4,9 @@ metadata:
   name: gameserver-config
 data:
   LOADBALANCER_IP: ""
+  init.sql: |
+    CREATE DATABASE leaderboard;
+    CREATE TABLE leaderboard.scores (name VARCHAR(255), score INT);
+    INSERT INTO leaderboard.scores (name, score) VALUES ('Alice', 100);
+    INSERT INTO leaderboard.scores (name, score) VALUES ('Bob', 200);
+    INSERT INTO leaderboard.scores (name, score) VALUES ('Charlie', 300);

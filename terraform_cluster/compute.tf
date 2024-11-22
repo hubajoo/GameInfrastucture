@@ -45,9 +45,9 @@ resource "aws_eks_node_group" "this" {
   instance_types = ["t3.micro"]
 
   scaling_config {
-    desired_size = 3
-    max_size     = 3
-    min_size     = 3
+    desired_size = 2
+    max_size     = 2
+    min_size     = 2
   }
 
   depends_on = [
@@ -116,8 +116,4 @@ resource "aws_iam_policy" "eks_cluster_autoscaler" {
 resource "aws_iam_role_policy_attachment" "eks_cluster_autoscaler_attach" {
   role       = aws_iam_role.eks_cluster_autoscaler.name
   policy_arn = aws_iam_policy.eks_cluster_autoscaler.arn
-}
-
-output "eks_cluster_autoscaler_arn" {
-  value = aws_iam_role.eks_cluster_autoscaler.arn
 }
