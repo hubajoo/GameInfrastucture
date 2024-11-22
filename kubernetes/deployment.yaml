@@ -21,3 +21,9 @@ spec:
               cpu: "500m"
           ports:
             - containerPort: 8090
+          env:
+            - name: LOADBALANCER_IP
+              valueFrom:
+                configMapKeyRef:
+                  name: gameserver-config
+                  key: LOADBALANCER_IP

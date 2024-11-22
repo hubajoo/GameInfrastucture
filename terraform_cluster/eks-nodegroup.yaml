@@ -6,9 +6,9 @@ metadata:
 managedNodeGroups:
   - name: huba-eks-nodegroup-auto
     instanceType: t3.micro
-    minsize: 2
-    maxSize: 2
-    desiredCapacity: 2
+    minsize: 3
+    maxSize: 3
+    desiredCapacity: 3
 vpc:
   id: "vpc-0b367604ffb554deb"
   securityGroup: "sg-04dad5b41692de2da"
