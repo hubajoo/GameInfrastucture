@@ -32,26 +32,40 @@ data:
   POSTGRES_DB: $POSTGRES_DB_ENCODED
 EOF
 
-
 #set -x
 
 # Change to the terraform_cluster directory and apply the Terraform configuration
 cd terraform_cluster && \
 terraform apply -auto-approve && \
+
 # Update kubeconfig
 aws eks --region eu-central-1 update-kubeconfig --name huba-eks-tf-cluster && \
 cd .. && \
+
 # Apply the Kubernetes manifests
-kubectl apply --validate=false -f kubernetes/configmap.yaml && \
-kubectl apply --validate=false -f kubernetes/depl-service.yaml && \
-kubectl apply --validate=false -f kubernetes/load-balancer.yaml && \
-kubectl apply --validate=false -f kubernetes/ingress.yaml && \
-kubectl apply --validate=false -f kubernetes/postgres-pv.yaml && \
-kubectl apply --validate=false -f kubernetes/postgres-pvc.yaml && \
-kubectl apply --validate=false -f kubernetes/postgres-deployment.yaml && \
-kubectl apply --validate=false -f kubernetes/postgres-service.yaml && \
-kubectl apply --validate=false -f kubernetes/postgres-secret.yaml  && \
-kubectl apply --validate=false -f kubernetes/deployment.yaml && \
+kubectl apply -f kubernetes/postgres-configmap.yaml && \
+kubectl apply -f kubernetes/postgres-pv.yaml && \
+kubectl apply -f kubernetes/postgres-pvc.yaml && \
+kubectl apply -f kubernetes/postgres-secret.yaml && \
+kubectl apply -f kubernetes/postgres-deployment.yaml && \
+kubectl apply -f kubernetes/postgres-service.yaml && \
+kubectl apply -f kubernetes/gameserver-configmap.yaml && \
+kubectl apply -f kubernetes/gameserver-service.yaml && \
+kubectl apply -f kubernetes/gameserver-deployment.yaml && \
+kubectl apply -f kubernetes/load-balancer.yaml && \
+kubectl apply -f kubernetes/ingress.yaml && \
+
+#kubectl apply --validate=false -f kubernetes/postgres-configmap.yaml && \
+#kubectl apply --validate=false -f kubernetes/postgres-pv.yaml && \
+#kubectl apply --validate=false -f kubernetes/postgres-pvc.yaml && \
+#kubectl apply --validate=false -f kubernetes/postgres-secret.yaml && \
+#kubectl apply --validate=false -f kubernetes/postgres-deployment.yaml && \
+#kubectl apply --validate=false -f kubernetes/postgres-service.yaml && \
+#kubectl apply --validate=false -f kubernetes/configmap.yaml && \
+#kubectl apply --validate=false -f kubernetes/gameserver-service.yaml && \
+#kubectl apply --validate=false -f kubernetes/gameserver-deployment.yaml && \
+#kubectl apply --validate=false -f kubernetes/load-balancer.yaml && \
+#kubectl apply --validate=false -f kubernetes/ingress.yaml && \
 
 
 # Wait for the LoadBalancer to get an external IP

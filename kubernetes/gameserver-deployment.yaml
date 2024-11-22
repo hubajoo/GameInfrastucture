@@ -17,23 +17,21 @@ spec:
           image: joohuba/huba-game-server:latest
           resources:
             limits:
+              memory: "256Mi"
+              cpu: "250m"
+            requests:
               memory: "128Mi"
-              cpu: "500m"
+              cpu: "125m"
           ports:
             - containerPort: 8090
           env:
-            - name: LOADBALANCER_IP
-              valueFrom:
-                configMapKeyRef:
-                  name: gameserver-config
-                  key: LOADBALANCER_IP
             - name: DB_HOST
               value: "postgres"
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                name: postgres-secret
-                key: POSTGRES_USER
+                  name: postgres-secret
+                  key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:

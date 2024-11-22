@@ -1,9 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gameserver-config
+  name: postgres-init-script
 data:
-  LOADBALANCER_IP: ""
   init.sql: |
     CREATE DATABASE leaderboard;
     CREATE TABLE leaderboard.scores (name VARCHAR(255), score INT);
