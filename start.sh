@@ -8,7 +8,8 @@ fi
 
 echo "Initializing Kubernetes cluster..."
 
-set -x
+#set -x
+
 # Change to the terraform_cluster directory and apply the Terraform configuration
 cd terraform_cluster && \
 terraform apply -auto-approve && \
@@ -25,17 +26,20 @@ kubectl apply --validate=false -f kubernetes/ingress.yaml && \
 
 # Wait for the LoadBalancer to get an external IP
 echo "Waiting for LoadBalancer to get an external IP..."
-sleep 60  # Adjust the sleep time as needed
-
-# Output the LoadBalancer's external IP
-EXTERNAL_IP=$(kubectl get svc gameserver-deployment-loadbalancer -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-echo "LoadBalancer External IP: $EXTERNAL_IP"
+EXTERNAL_IP=""
+while [ -z "$EXTERNAL_IP" ]; do
+  echo "Waiting for external IP..."
+  kubectl get svc gameserver-deployment-loadbalancer  | awk {'print $3'}
+  kubectl get svc gameserver-deployment-loadbalancer  -o json 
+  EXTERNAL_IP=$(kubectl get svc gameserver-deployment-loadbalancer -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  [ -z "$EXTERNAL_IP" ] && sleep 10
+done
+echo "LoadBalancer External IP: $EXTERNAL_IP" && \
 
 # Update the ConfigMap with the external IP
-kubectl patch configmap gameserver-config -p "{\"data\":{\"LOADBALANCER_IP\":\"$EXTERNAL_IP\"}}"
+kubectl patch configmap gameserver-config -p "{\"data\":{\"LOADBALANCER_IP\":\"$EXTERNAL_IP\"}}" && \
 
 # Restart the deployment to pick up the new environment variable
-kubectl rollout restart deployment gameserver-deployment
-
+kubectl rollout restart deployment gameserver-deployment && \
 
 echo "Kubernetes cluster initialized successfully."

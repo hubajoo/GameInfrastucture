@@ -95,7 +95,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
   security_group_id = aws_security_group.allow_http.id
 
-  cidr_ipv4 = aws_vpc.this.cidr_block
+  cidr_ipv4   = aws_vpc.this.cidr_block
   from_port   = 22
   ip_protocol = "tcp"
   to_port     = 22
@@ -104,7 +104,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
 resource "aws_vpc_security_group_ingress_rule" "allow_kubelet_api" {
   security_group_id = aws_security_group.allow_http.id
 
-  cidr_ipv4 = aws_vpc.this.cidr_block
+  cidr_ipv4   = aws_vpc.this.cidr_block
   from_port   = 10250
   ip_protocol = "tcp"
   to_port     = 10250
@@ -113,7 +113,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_kubelet_api" {
 resource "aws_vpc_security_group_ingress_rule" "allow_kube-proxy" {
   security_group_id = aws_security_group.allow_http.id
 
-  cidr_ipv4 = aws_vpc.this.cidr_block
+  cidr_ipv4   = aws_vpc.this.cidr_block
   from_port   = 10256
   ip_protocol = "tcp"
   to_port     = 10256
