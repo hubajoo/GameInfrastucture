@@ -43,6 +43,7 @@ aws eks --region eu-central-1 update-kubeconfig --name huba-eks-tf-cluster && \
 cd .. && \
 
 # Apply the Kubernetes manifests
+kubectl apply -f kubernetes/eks-nodegroup.yaml && \
 kubectl apply -f kubernetes/postgres-configmap.yaml && \
 kubectl apply -f kubernetes/postgres-pv.yaml && \
 kubectl apply -f kubernetes/postgres-pvc.yaml && \
@@ -88,3 +89,4 @@ kubectl rollout restart deployment gameserver-deployment && \
 kubectl rollout status deployment gameserver-deployment && \
 
 echo "Kubernetes cluster initialized successfully."
+echo "Site is available at http://$EXTERNAL_IP"

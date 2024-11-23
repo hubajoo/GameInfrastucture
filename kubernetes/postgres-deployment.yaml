@@ -12,35 +12,6 @@ spec:
       labels:
         app: postgres
     spec:
-      initContainers:
-        - name: init-script
-          image: postgres:13
-          env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_DB
-          command:
-            [
-              "sh",
-              "-c",
-              "psql -U $POSTGRES_USER -d $POSTGRES_DB -f /docker-entrypoint-initdb.d/init.sql",
-            ]
-          volumeMounts:
-            - name: init-script
-              mountPath: /docker-entrypoint-initdb.d
-              subPath: init.sql
       containers:
         - name: postgres
           image: postgres:13
@@ -69,10 +40,3 @@ spec:
                   key: POSTGRES_DB
           ports:
             - containerPort: 5432
-          volumeMounts:
-            - name: init-script
-              mountPath: /docker-entrypoint-initdb.d
-      volumes:
-        - name: init-script
-          configMap:
-            name: postgres-init-script
