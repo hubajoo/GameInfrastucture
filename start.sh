@@ -43,7 +43,6 @@ aws eks --region eu-central-1 update-kubeconfig --name huba-eks-tf-cluster && \
 cd .. && \
 
 # Apply the Kubernetes manifests
-kubectl apply -f kubernetes/eks-nodegroup.yaml && \
 kubectl apply -f kubernetes/postgres-configmap.yaml && \
 kubectl apply -f kubernetes/postgres-pv.yaml && \
 kubectl apply -f kubernetes/postgres-pvc.yaml && \
@@ -56,31 +55,26 @@ kubectl apply -f kubernetes/gameserver-deployment.yaml && \
 kubectl apply -f kubernetes/load-balancer.yaml && \
 kubectl apply -f kubernetes/ingress.yaml && \
 
-#kubectl apply --validate=false -f kubernetes/postgres-configmap.yaml && \
-#kubectl apply --validate=false -f kubernetes/postgres-pv.yaml && \
-#kubectl apply --validate=false -f kubernetes/postgres-pvc.yaml && \
-#kubectl apply --validate=false -f kubernetes/postgres-secret.yaml && \
-#kubectl apply --validate=false -f kubernetes/postgres-deployment.yaml && \
-#kubectl apply --validate=false -f kubernetes/postgres-service.yaml && \
-#kubectl apply --validate=false -f kubernetes/configmap.yaml && \
-#kubectl apply --validate=false -f kubernetes/gameserver-service.yaml && \
-#kubectl apply --validate=false -f kubernetes/gameserver-deployment.yaml && \
-#kubectl apply --validate=false -f kubernetes/load-balancer.yaml && \
-#kubectl apply --validate=false -f kubernetes/ingress.yaml && \
-
 
 # Wait for the LoadBalancer to get an external IP
-echo "Waiting for LoadBalancer to get an external IP..."
 EXTERNAL_IP=""
+echo "Waiting for LoadBalancer to get an external IP..."
 while [ -z "$EXTERNAL_IP" ]; do
   echo "Waiting for external IP..."
   EXTERNAL_IP=$(kubectl get svc gameserver-deployment-loadbalancer -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
   [ -z "$EXTERNAL_IP" ] && sleep 3
-done
-echo "LoadBalancer External IP: $EXTERNAL_IP" && \
+done 
+
+echo "LoadBalancer External IP: $EXTERNAL_IP"
 
 # Update the ConfigMap with the external IP
-kubectl patch configmap gameserver-config -p "{\"data\":{\"LOADBALANCER_IP\":\"$EXTERNAL_IP\"}}" && \
+kubectl patch configmap gameserver-config -p "{\"data\":{
+                                              \"LOADBALANCER_IP\":\"$EXTERNAL_IP\",
+                                              \"POSTGRES_USER\":\"$POSTGRES_USER\",
+                                              \"POSTGRES_PASSWORD\":\"$POSTGRES_PASSWORD\",
+                                              \"POSTGRES_DB\":\"$POSTGRES_DB\"}}" && \
+
+kubectl set env --keys="LOADBALANCER_IP" --from=configmap/gameserver-config deployment/gameserver-deployment
 
 # Restart the deployment to pick up the new environment variable
 kubectl rollout restart deployment gameserver-deployment && \
