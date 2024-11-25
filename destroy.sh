@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Check if the AWS CLI is logged in
-if ! aws sts get-caller-identity &> /dev/null; then
-  echo "Error: AWS CLI is not logged in. Please configure your AWS credentials."
+# Verify dependencies
+if ! bash ./dependency-check.sh; then
+  echo "Error: Dependencies not met. Please check the error messages above."
   exit 1
-fi
+fi &&\
 
 echo "Destroying resources..."
 
