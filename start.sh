@@ -93,13 +93,9 @@ done
 echo "LoadBalancer External IP: $EXTERNAL_IP"
 
 # Update the ConfigMap with the external IP
-kubectl patch configmap gameserver-config -p "{\"data\":{
-                                              \"LOADBALANCER_IP\":\"$EXTERNAL_IP\",
-                                              \"POSTGRES_USER\":\"$POSTGRES_USER\",
-                                              \"POSTGRES_PASSWORD\":\"$POSTGRES_PASSWORD\",
-                                              \"POSTGRES_DB\":\"$POSTGRES_DB\"}}" && \
+kubectl patch configmap gameserver-config -p "{\"data\":{\"LOADBALANCER_IP\":\"$EXTERNAL_IP\"}}"  && \
 
-kubectl set env --keys="LOADBALANCER_IP" --from=configmap/gameserver-config deployment/gameserver-deployment
+#kubectl set env --keys="LOADBALANCER_IP" --from=configmap/gameserver-config deployment/gameserver-deployment
 
 # Restart the deployment to pick up the new environment variable
 kubectl rollout restart deployment gameserver-deployment && \
