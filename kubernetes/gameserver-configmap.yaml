@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: gameserver-config
 data:
-  LOADBALANCER_IP: ""
+  LOADBALANCER_IP: 127.0.0.1:34705

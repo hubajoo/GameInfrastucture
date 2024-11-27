@@ -71,31 +71,64 @@ test.sh
 
 ## Dependencies
 
-- **AWS CLI:** Required for managing AWS resources.
-- **kubectl:** Required for managing Kubernetes clusters.
+- **[Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/):** Required for managing Kubernetes clusters.
 - **Bash:** Required for running shell scripts.
-- **Terraform:** Required for provisioning infrastructure.
+  ## EKS version 
 
- The start.sh, destroy.sh and test.sh scripts autmatically verify dependencies, for manual veryfication use dependeny-check.sh:
+  - **[Terraform](https://www.terraform.io/downloads.html):** Required for provisioning infrastructure.
+
+  - **[AWS CLI](https://aws.amazon.com/cli/):** Required for managing AWS resources.
+
+  ## Local version
+- **[Docker](https://docs.docker.com/get-docker/)**
+- **[Minikube](https://minikube.sigs.k8s.io/docs/start/)**
+
+- When using **[Minikube](https://minikube.sigs.k8s.io/docs/start/)** tunneling is recommended.
+
+    ```sh
+   minikube tunnel
+   ```
+
+ The start.sh, destroy.sh and test.sh scripts automatically verify dependencies, for manual verification use dependency-check.sh:
 
    ```sh
-   ./dependeny-check.sh
+   ./dependency-check.sh
    ```
 
 ## Usage
 
- **Initialize Infrastructure:**
+  **Initialize Infrastructure:**
 
    ```sh
    ./start.sh
    ```
-This script will:
+  This script will:
+
 1. Verify dependencies.
-2. Load environment variables from the `.env` file.
-3. Apply the Terraform configuration to create the EKS cluster.
-4. Update the kubeconfig for the EKS cluster.
-5. Apply the Kubernetes manifests to create the necessary resources.
-6. Output the address that you can use to access the application in your browser.
+
+2. Load environment variables from the `.env` file, or use default values.
+
+3. Prompt the user if they want to use a dedicated cluster and if they are using minikube.
+    - If the user selected dedicated cluster:
+
+      - Apply the Terraform configuration to create/verify the EKS cluster.
+
+      - Apply the Kubernetes manifests to create/update the necessary resources.
+
+      - Update the kubeconfig for the cluster.
+
+      - Output the load balancer's address.
+
+    - If the user selected minikube:
+
+      - Ask the user if the are using minikube.
+
+      - Apply the Kubernetes manifests to create the necessary resources.
+
+      - Output how they can access the server.
+      
+      - In minikube, the server can't get it's own address, so leader board funcionality is broken.
+
 
  **Verify Infrasctructure creation:**
 
@@ -103,20 +136,26 @@ This script will:
    ./test.sh
    ```
 
-This script will:
-1. Veryfy dependencies.
-2. Verify that the Kubernetes configuration files are present.
-3. Check if the Kubernetes resources are successfully created.
+  This script will:
+
+  1. Verify dependencies.
+
+  2. Verify that the necessiary Kubernetes configuration files are present.
+
+  3. Check if the Kubernetes resources are successfully created.
 
  **Destroy Infrastructure:**
 
    ```sh
    ./destroy.sh
    ```
-This script will:
-1. Verify dependencies.
-2. Delete the Kubernetes resources.
-3. Destroy the EKS cluster using Terraform.
+  This script will:
+
+  1. Verify dependencies.
+
+  2. Delete the Kubernetes resources.
+
+  3. Destroy the EKS cluster using Terraform.
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
