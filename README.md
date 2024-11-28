@@ -5,55 +5,62 @@ This repository contains the infrastructure setup for a Kubernetes cluster and r
 ## Project Structure
 
 ```
-kubernetes/
-    postgres-configmap.yaml
-    postgres-pv.yaml
-    postgres-pvc.yaml
-    postgres-secret.yaml
-    postgres-deployment.yaml
-    postgres-service.yaml
-    gameserver-configmap.yaml
-    gameserver-service.yaml
-    gameserver-deployment.yaml
-    load-balancer.yaml
-    ingress.yaml
-terraform_cluster/
-    compute.tf
-    eks-nodegroup.yaml
-    main.tf
-    network.tf
-    providers.tf
-    role.json
-    terraform.tfstate
-    terraform.tfstate.backup
-dependency-check.sh
-destroy.sh
-LICENSE
-README.md
-start.sh
-test.sh
+    kubernetes/
+        postgres-configmap.yaml
+        postgres-pv.yaml
+        postgres-pvc.yaml
+        postgres-secret.yaml
+        postgres-deployment.yaml
+        postgres-service.yaml
+        gameserver-configmap.yaml
+        gameserver-service.yaml
+        gameserver-deployment.yaml
+        load-balancer.yaml
+        ingress.yaml
+    local-config/
+        postgres-claim.yaml
+    terraform_cluster/
+        kubernetes/
+            postgres-claim.yaml
+            postgres-pv.yaml
+            storage-service.yaml
+        compute.tf
+        eks-nodegroup.yaml
+        main.tf
+        network.tf
+        providers.tf
+        role.json
+        terraform.tfstate
+        terraform.tfstate.backup
+    dependency-check.sh
+    destroy.sh
+    LICENSE
+    README.md
+    start.sh
+    test.sh
 ```
 
 ## Key Components
 
 ### Kubernetes Configuration
 
-- **postgres-configmap.yaml**: ConfigMap for PostgreSQL initialization script.
-- **postgres-pv.yaml**: PersistentVolume configuration for PostgreSQL.
-- **postgres-pvc.yaml**: PersistentVolumeClaim configuration for PostgreSQL.
-- **postgres-secret.yaml**: Secret configuration for PostgreSQL credentials.
-- **postgres-deployment.yaml**: Deployment configuration for PostgreSQL.
-- **postgres-service.yaml**: Service configuration for PostgreSQL.
-- **gameserver-configmap.yaml**: ConfigMap for GameServer configuration.
-- **gameserver-service.yaml**: Service configuration for GameServer.
-- **gameserver-deployment.yaml**: Deployment configuration for GameServer.
-- **load-balancer.yaml**: LoadBalancer service configuration for external access.
-- **ingress.yaml**: Ingress configuration for routing external traffic.
-
+- **postgres-configmap.yaml:** ConfigMap for PostgreSQL configuration.
+- **postgres-init-configmap.yaml:** ConfigMap for PostgreSQL initialization script.
+- **postgres-pv.yaml:** PersistentVolume configuration for PostgreSQL.
+- **postgres-claim.yaml:** PersistentVolumeClaim configuration for PostgreSQL.
+- **postgres-secret.yaml:** Secret configuration for PostgreSQL credentials.
+- **postgres-deployment.yaml:** Deployment configuration for PostgreSQL.
+- **postgres-service.yaml:** Service configuration for PostgreSQL.
+- **gameserver-configmap.yaml:** ConfigMap for GameServer configuration.
+- **gameserver-service.yaml:** Service configuration for GameServer.
+- **gameserver-deployment.yaml:** Deployment configuration for GameServer.
+- **load-balancer.yaml:** LoadBalancer service configuration for external access.
+- **ingress.yaml:** Ingress configuration for routing external traffic.
 
 ### Terraform Configuration
 
 - **compute.tf**: Terraform configuration for compute resources, including EKS cluster and node groups.
+- **ebs-volumes.tf:** EBS volumes configuration for persistent storage.
 - **main.tf**: Main Terraform configuration file that ties together all the resources.
 - **network.tf**: Terraform configuration for network resources, including VPC, subnets, and security groups.
 - **providers.tf**: Terraform configuration for provider settings, including AWS provider.
