@@ -30,7 +30,7 @@ spec:
   capacity:
     storage: 2Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   awsElasticBlockStore:
     volumeID: $postgres_volume_id
     fsType: ext4
