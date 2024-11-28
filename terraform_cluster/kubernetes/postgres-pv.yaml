@@ -12,5 +12,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   awsElasticBlockStore:
-    volumeID: <volume-id-of-postgres-volume>
+    volumeID: ${postgres_volume_id}
     fsType: ext4

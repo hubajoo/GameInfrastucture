@@ -4,3 +4,6 @@ metadata:
   name: gameserver-config
 data:
   LOADBALANCER_IP: 127.0.0.1:34705
+  POSTGRES_DB: leaderboard
+  POSTGRES_USER: admin
+  POSTGRES_PASSWORD: password

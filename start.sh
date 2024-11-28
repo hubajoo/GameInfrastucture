@@ -7,9 +7,34 @@ YELLOW='\033[1;33m'
 GRAY='\033[1;30m'
 NC='\033[0m' # No Color
 
+# Prompt the user if they want to create a new cluster or use their default cluster
+
+while [ "$new_cluster" != "yes" ] && [ "$new_cluster" != "no" ]; do
+read -r -p "    Do you want to use dedicated cluster? (yes/no): " new_cluster
+if [ "$new_cluster" == "yes" ]; then
+
+  # Create a new cluster
+  echo "Starting terraform..."
+
+  # Change to the terraform_cluster directory and apply the Terraform configuration
+  cd terraform_cluster && \
+  terraform apply -auto-approve && \
+  cd .. && \
+
+  # Update kubeconfig
+  aws eks --region eu-central-1 update-kubeconfig --name huba-eks-tf-cluster
+
+fi
+done
+
+
+while [ "$minikube" != "yes" ] && [ "$minikube" != "no" ] && [ "$new_cluster" == "no" ]; do
+read -r -p "    Are you using minikube? - Limited functionality available only (yes/no): " minikube
+done
+
 
 # Use dependency-check.sh to verify dependencies
-if ! bash ./dependency-check.sh; then
+if ! bash ./dependency-check.sh $minikube; then
   echo -e "${RED}Error: Dependencies not met. Please check the error messages above.${NC}\n"
   exit 1
 fi
@@ -56,30 +81,6 @@ data:
 
 EOF
 
-# Prompt the user if they want to create a new cluster or use their default cluster
-
-while [ "$new_cluster" != "yes" ] && [ "$new_cluster" != "no" ]; do
-read -r -p "    Do you want to use dedicated cluster? (yes/no): " new_cluster
-if [ "$new_cluster" == "yes" ]; then
-
-  # Create a new cluster
-  echo "Starting terraform..."
-
-  # Change to the terraform_cluster directory and apply the Terraform configuration
-  cd terraform_cluster && \
-  terraform apply -auto-approve && \
-  cd .. && \
-
-  # Update kubeconfig
-  aws eks --region eu-central-1 update-kubeconfig --name huba-eks-tf-cluster
-
-fi
-done
-
-
-while [ "$minikube" != "yes" ] && [ "$minikube" != "no" ] && [ "$new_cluster" == "no" ]; do
-read -r -p "    Are you using minikube? - Limited functionality available only (yes/no): " minikube
-done
 
 # Function to create a resource
 create_resource(){
