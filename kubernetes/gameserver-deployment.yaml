@@ -17,11 +17,8 @@ spec:
           image: joohuba/huba-game-server:latest
           resources:
             limits:
-              memory: "256Mi"
+              memory: "120Mi"
               cpu: "250m"
-            requests:
-              memory: "128Mi"
-              cpu: "125m"
           ports:
             - containerPort: 8090
           envFrom:

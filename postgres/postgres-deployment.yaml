@@ -23,8 +23,8 @@ spec:
                 name: postgres-config
           resources:
             limits:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "120Mi"
+              cpu: "300m"
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgresdata

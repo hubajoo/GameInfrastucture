@@ -1,29 +1,16 @@
 resource "aws_ebs_volume" "postgres_volume" {
   availability_zone = "eu-central-1a"
-  size              = 10  # Size in GiB
-  type              = "gp2"
+  size              = 2  # Size in GiB
+  type              = "io1"
 
   tags = {
     Name = "postgres-volume"
   }
 }
 
-resource "aws_ebs_volume" "gameserver_volume" {
-  availability_zone = "eu-central-1a"
-  size              = 10  # Size in GiB
-  type              = "gp2"
 
-  tags = {
-    Name = "gameserver-volume"
-  }
-}
-/*
 output "postgres_volume_id" {
   value = aws_ebs_volume.postgres_volume.id
-}
-
-output "gameserver_volume_id" {
-  value = aws_ebs_volume.gameserver_volume.id
 }
 
 data "template_file" "storage_class" {
@@ -46,7 +33,6 @@ data "template_file" "persistent_volumes" {
   template = file("${path.module}/kubernetes/postgres-pv.yaml")
   vars = {
     postgres_volume_id   = aws_ebs_volume.postgres_volume.id
-    gameserver_volume_id = aws_ebs_volume.gameserver_volume.id
   }
 }
 
@@ -61,4 +47,10 @@ resource "null_resource" "apply_k8s_pv_config" {
   }
   depends_on = [local_file.persistent_volumes]
 }
-*/
+
+resource "null_resource" "apply_k8s_pvc_config" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/kubernetes/postgres-claim.yaml"
+  }
+ // depends_on = [null_resource.apply_k8s_pv_config]
+}

@@ -63,7 +63,7 @@ read -r -p "    Do you want to use dedicated cluster? (yes/no): " new_cluster
 if [ "$new_cluster" == "yes" ]; then
 
   # Create a new cluster
-  echo "Creating a new cluster..."
+  echo "Starting terraform..."
 
   # Change to the terraform_cluster directory and apply the Terraform configuration
   cd terraform_cluster && \
@@ -143,10 +143,10 @@ if [ "$new_cluster" == "yes" ]; then
   # Wait for the LoadBalancer to get an external IP
   EXTERNAL_IP=""
   echo "Waiting for LoadBalancer to get an external IP..."
-  while [ -z "$EXTERNAL_IP" ]; do
+  while [ -z $EXTERNAL_IP ]; do
     echo "Waiting for external IP..."
     EXTERNAL_IP=$(kubectl get svc gameserver-deployment-loadbalancer -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-    [ -z "$EXTERNAL_IP" ] && sleep 3
+    [ -z $EXTERNAL_IP ] && sleep 3
   done 
 fi
 
@@ -154,18 +154,14 @@ fi
 # MiniKube handling
 if [ "$minikube" == "yes" ]; then
 
-  # Restart the deployment to pick up the new environment variable
-  kubectl rollout restart deployment gameserver-deployment && \
-  kubectl rollout restart deployment postgres && \
-
   echo -e "\n   ${YELLOW}In minikube we can't get the external IP of the LoadBalancer.${NC}"
 
-   #"Because you are using a Docker driver on linux, the terminal needs to be open to run it."
+   # MiniKube command needs an open terminaly so we can't extract the IP
    echo    "   To access the site, run the following command in the terminal:"
    echo -e "   ${GREEN}minikube service  gameserver-deployment-loadbalancer --url ${NC}"
    echo -e "   (You might gave to allow tunneling)\n"
  
- 
+  # Exit, because we don't need to update the ConfigMap and restart the deployments
  exit 1
 fi
 
@@ -173,9 +169,9 @@ fi
 kubectl patch configmap gameserver-config -p "{\"data\":{\"LOADBALANCER_IP\":\"$EXTERNAL_IP\", \"POSTGRES_DB\":\"$POSTGRES_DB\", \"POSTGRES_USER\":\"$POSTGRES_USER\", \"POSTGRES_PASSWORD\":\"$POSTGRES_PASSWORD\"}}"
 
 
-# Restart the deployment to pick up the new environment variable
+# Restart the server deployment to pick up the new environment variable
 kubectl rollout restart deployment gameserver-deployment && \
-kubectl rollout restart deployment postgres && \
+#kubectl rollout restart deployment postgres
 
 # Check the status of the deployment
 kubectl rollout status deployment gameserver-deployment && \
