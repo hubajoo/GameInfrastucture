@@ -6,11 +6,10 @@ metadata:
     type: local
     app: postgres
 spec:
-  storageClassName: ebs-sc
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   accessModes:
     - ReadWriteOnce
   awsElasticBlockStore:
-    volumeID: ${postgres_volume_id}
+    volumeID: vol-0ab99a98308e6d0cf
     fsType: ext4

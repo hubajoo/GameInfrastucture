@@ -8,7 +8,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Verify dependencies
-if ! bash ./dependency-check.sh; then
+if ! bash ./utility-scripts/dependency-check.sh; then
   echo -e "${RED}Error: Dependencies not met. Please check the error messages above.${NC}\n"
   exit 1
 fi &&\
@@ -20,19 +20,18 @@ delete_resource(){
 
   # Extract the arguments
   local file=$1
-  local resource=$2
+  local resource
   local retries=5
   local count=0
 
   # Extract resource name
   resource=$(basename "$file" .yaml)
 
-
   # Check if the resource exists
   if [ ! -f "$file" ] || ! kubectl get -f "$file" &> /dev/null; then
 
     # Skip if the resource does not exist
-    echo -e "${GRAY}$resource file not found, skipping...${NC}"
+    echo -e "${GRAY}$resource not found in cluster, skipping...${NC}"
     return
   fi
 
@@ -63,7 +62,6 @@ delete_resource(){
   return
 }
 
-
 # Iterate through the resources in the kubernetes directory
 for resource in kubernetes/*; do
   delete_resource $resource "kubernetes/$resource"
@@ -74,22 +72,11 @@ for resource in postgres/*; do
   delete_resource $resource "postgres/$resource"
 done
 
-
-
 # Destroy the EKS cluster
 echo "Destroying cluster..."
 cd terraform_cluster && \
 terraform destroy -auto-approve && \
 cd .. && \
 
-# Unset the environment variables
-unset POSTGRES_USER
-unset POSTGRES_PASSWORD
-unset POSTGRES_DB
 
-# Unset the encoded environment variables
-unset POSTGRES_USER_ENCODED
-unset POSTGRES_PASSWORD_ENCODED
-unset POSTGRES_DB_ENCODED
-
-echo "\n${GREEN}Infrastructure successfully destroyed.${NC}\n"
+echo -e "\n${GREEN}Infrastructure successfully destroyed.${NC}\n"

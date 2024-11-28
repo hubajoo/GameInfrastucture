@@ -164,6 +164,7 @@ This repository contains the infrastructure setup for a Kubernetes cluster and r
 - **destroy.sh**: Script to destroy the infrastructure by deleting Kubernetes resources and destroying the EKS cluster using Terraform.
 - **test.sh**: Script to verify that the infrastructure is fully built and all Kubernetes resources are successfully created.
 - **dependency-check.sh**: Script to check if all required dependencies (Terraform, kubectl, AWS CLI) are installed.
+- **eks-setup.sh**: Script to apply Terraform templates, extract necessiary outputs and setup storage handling on the EKS cluster.
 
 
 ## License

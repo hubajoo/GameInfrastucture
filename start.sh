@@ -13,16 +13,8 @@ while [ "$new_cluster" != "yes" ] && [ "$new_cluster" != "no" ]; do
 read -r -p "    Do you want to use dedicated cluster? (yes/no): " new_cluster
 if [ "$new_cluster" == "yes" ]; then
 
-  # Create a new cluster
-  echo "Starting terraform..."
-
-  # Change to the terraform_cluster directory and apply the Terraform configuration
-  cd terraform_cluster && \
-  terraform apply -auto-approve && \
-  cd .. && \
-
-  # Update kubeconfig
-  aws eks --region eu-central-1 update-kubeconfig --name huba-eks-tf-cluster
+  # Execute the eks-setup.sh script
+  bash ./utility-scripts/eks-setup.sh
 
 fi
 done
@@ -34,7 +26,7 @@ done
 
 
 # Use dependency-check.sh to verify dependencies
-if ! bash ./dependency-check.sh $minikube; then
+if ! bash ./utility-scripts/dependency-check.sh $minikube; then
   echo -e "${RED}Error: Dependencies not met. Please check the error messages above.${NC}\n"
   exit 1
 fi
@@ -66,7 +58,7 @@ fi
 echo "Building infrastructure..."
 
 
-# Create the secret YAML
+# Create the configmap YAML
 cat <<EOF > postgres/postgres-configmap.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -87,6 +79,7 @@ create_resource(){
 
   # Extract the arguments
   local resource=$1
+
 
   # Number of retries for creating resources
   local retries=5
@@ -110,7 +103,7 @@ create_resource(){
 
     # Log the retry and wait, then reattempt the creation
     count=$((count + 1))
-    echo "Retrying to create $resource ($count/$retries)..."
+    echo -e "${YELLOW}Retrying to create $resource ($count/$retries)...${NC}"
     sleep 5
   done
   return
@@ -122,19 +115,20 @@ if [ "$new_cluster" == "no" ]; then
 
   # Create the LoadBalancer service
   for resource in local-config/*; do
-  create_resource "$resource" "local-config/$resource"
+  create_resource "$resource"
   done
 fi && \
 
 
 # Iterate through the resources in the kubernetes directory
 for resource in kubernetes/*; do
-  create_resource "$resource" "kubernetes/$resource"
+  create_resource "$resource"
 done && \
+
 
 # Iterate through the resources in the postgres directory
 for resource in postgres/*; do
-  create_resource "$resource" "postgres/$resource"
+  create_resource "$resource"
 done && \
 
 
@@ -172,11 +166,9 @@ kubectl patch configmap gameserver-config -p "{\"data\":{\"LOADBALANCER_IP\":\"$
 
 # Restart the server deployment to pick up the new environment variable
 kubectl rollout restart deployment gameserver-deployment && \
-#kubectl rollout restart deployment postgres
 
 # Check the status of the deployment
 kubectl rollout status deployment gameserver-deployment && \
-kubectl rollout status deployment postgres && \
 
 echo -e "${GREEN}\nKubernetes cluster initialized successfully.${NC}"
 echo -e "${GREEN}Site is available at http://$EXTERNAL_IP \n${NC}"
