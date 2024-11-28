@@ -40,45 +40,10 @@ This repository contains the infrastructure setup for a Kubernetes cluster and r
     test.sh
 ```
 
-## Key Components
-
-### Kubernetes Configuration
-
-- **postgres-configmap.yaml:** ConfigMap for PostgreSQL configuration.
-- **postgres-init-configmap.yaml:** ConfigMap for PostgreSQL initialization script.
-- **postgres-pv.yaml:** PersistentVolume configuration for PostgreSQL.
-- **postgres-claim.yaml:** PersistentVolumeClaim configuration for PostgreSQL.
-- **postgres-secret.yaml:** Secret configuration for PostgreSQL credentials.
-- **postgres-deployment.yaml:** Deployment configuration for PostgreSQL.
-- **postgres-service.yaml:** Service configuration for PostgreSQL.
-- **gameserver-configmap.yaml:** ConfigMap for GameServer configuration.
-- **gameserver-service.yaml:** Service configuration for GameServer.
-- **gameserver-deployment.yaml:** Deployment configuration for GameServer.
-- **load-balancer.yaml:** LoadBalancer service configuration for external access.
-- **ingress.yaml:** Ingress configuration for routing external traffic.
-
-### Terraform Configuration
-
-- **compute.tf**: Terraform configuration for compute resources, including EKS cluster and node groups.
-- **ebs-volumes.tf:** EBS volumes configuration for persistent storage.
-- **main.tf**: Main Terraform configuration file that ties together all the resources.
-- **network.tf**: Terraform configuration for network resources, including VPC, subnets, and security groups.
-- **providers.tf**: Terraform configuration for provider settings, including AWS provider.
-- **role.json**: JSON file defining IAM roles and policies for the EKS cluster.
-
-
-### Scripts
-
-- **start.sh**: Script to initialize the infrastructure by applying Terraform configurations and Kubernetes manifests.
-- **destroy.sh**: Script to destroy the infrastructure by deleting Kubernetes resources and destroying the EKS cluster using Terraform.
-- **test.sh**: Script to verify that the infrastructure is fully built and all Kubernetes resources are successfully created.
-- **dependency-check.sh**: Script to check if all required dependencies (Terraform, kubectl, AWS CLI) are installed.
-
-
-
 ## Dependencies
 
 - **[Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/):** Required for managing Kubernetes clusters.
+  
 - **Bash:** Required for running shell scripts.
   ## EKS version 
 
@@ -87,14 +52,14 @@ This repository contains the infrastructure setup for a Kubernetes cluster and r
   - **[AWS CLI](https://aws.amazon.com/cli/):** Required for managing AWS resources.
 
   ## Local version
-- **[Docker](https://docs.docker.com/get-docker/)**
-- **[Minikube](https://minikube.sigs.k8s.io/docs/start/)**
+  - **[Docker](https://docs.docker.com/get-docker/)**
+  - **[Minikube](https://minikube.sigs.k8s.io/docs/start/)**
 
-- When using **[Minikube](https://minikube.sigs.k8s.io/docs/start/)** tunneling is recommended.
+  - When using **[Minikube](https://minikube.sigs.k8s.io/docs/start/)** tunneling is recommended.
 
-    ```sh
-   minikube tunnel
-   ```
+      ```sh
+    minikube tunnel
+    ```
 
  The start.sh, destroy.sh and test.sh scripts automatically verify dependencies, for manual verification use dependency-check.sh:
 
@@ -163,6 +128,43 @@ This repository contains the infrastructure setup for a Kubernetes cluster and r
   2. Delete the Kubernetes resources.
 
   3. Destroy the EKS cluster using Terraform.
+
+
+
+## Key Components
+
+### Kubernetes Configuration
+
+- **postgres-configmap.yaml:** ConfigMap for PostgreSQL configuration.
+- **postgres-init-configmap.yaml:** ConfigMap for PostgreSQL initialization script.
+- **postgres-pv.yaml:** PersistentVolume configuration for PostgreSQL.
+- **postgres-claim.yaml:** PersistentVolumeClaim configuration for PostgreSQL.
+- **postgres-secret.yaml:** Secret configuration for PostgreSQL credentials.
+- **postgres-deployment.yaml:** Deployment configuration for PostgreSQL.
+- **postgres-service.yaml:** Service configuration for PostgreSQL.
+- **gameserver-configmap.yaml:** ConfigMap for GameServer configuration.
+- **gameserver-service.yaml:** Service configuration for GameServer.
+- **gameserver-deployment.yaml:** Deployment configuration for GameServer.
+- **load-balancer.yaml:** LoadBalancer service configuration for external access.
+- **ingress.yaml:** Ingress configuration for routing external traffic.
+
+### Terraform Configuration
+
+- **compute.tf**: Terraform configuration for compute resources, including EKS cluster and node groups.
+- **ebs-volumes.tf:** EBS volumes configuration for persistent storage.
+- **main.tf**: Main Terraform configuration file that ties together all the resources.
+- **network.tf**: Terraform configuration for network resources, including VPC, subnets, and security groups.
+- **providers.tf**: Terraform configuration for provider settings, including AWS provider.
+- **role.json**: JSON file defining IAM roles and policies for the EKS cluster.
+
+
+### Scripts
+
+- **start.sh**: Script to initialize the infrastructure by applying Terraform configurations and Kubernetes manifests.
+- **destroy.sh**: Script to destroy the infrastructure by deleting Kubernetes resources and destroying the EKS cluster using Terraform.
+- **test.sh**: Script to verify that the infrastructure is fully built and all Kubernetes resources are successfully created.
+- **dependency-check.sh**: Script to check if all required dependencies (Terraform, kubectl, AWS CLI) are installed.
+
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

@@ -45,12 +45,10 @@ resource "null_resource" "apply_k8s_pv_config" {
   provisioner "local-exec" {
     command = "kubectl apply -f ${local_file.persistent_volumes.filename}"
   }
-  depends_on = [local_file.persistent_volumes]
 }
 
 resource "null_resource" "apply_k8s_pvc_config" {
   provisioner "local-exec" {
     command = "kubectl apply -f ${path.module}/kubernetes/postgres-claim.yaml"
   }
- // depends_on = [null_resource.apply_k8s_pv_config]
 }
