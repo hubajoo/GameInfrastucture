@@ -6,10 +6,14 @@ metadata:
     type: local
     app: postgres
 spec:
+  storageClassName: ""
   capacity:
     storage: 2Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   awsElasticBlockStore:
-    volumeID: vol-0ab99a98308e6d0cf
+    volumeID: vol-0ad17793ae37453c4
     fsType: ext4
+  claimRef:
+    namespace: default
+    name: postgres-volume-claim

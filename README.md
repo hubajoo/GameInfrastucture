@@ -138,6 +138,8 @@ This repository contains the infrastructure setup for a Kubernetes cluster and r
 - **postgres-configmap.yaml:** ConfigMap for PostgreSQL configuration.
 - **postgres-init-configmap.yaml:** ConfigMap for PostgreSQL initialization script.
 - **postgres-pv.yaml:** PersistentVolume configuration for PostgreSQL.
+- **postgres-claim.yaml** 
+- **storage-class.yaml**
 - **postgres-claim.yaml:** PersistentVolumeClaim configuration for PostgreSQL.
 - **postgres-secret.yaml:** Secret configuration for PostgreSQL credentials.
 - **postgres-deployment.yaml:** Deployment configuration for PostgreSQL.

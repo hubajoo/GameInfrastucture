@@ -3,8 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: postgres-volume-claim
 spec:
+  storageClassName: ""
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 1Gi
