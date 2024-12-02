@@ -6,8 +6,8 @@ printf "Starting terraform...\n"
 # Change to the terraform_cluster directory and apply the Terraform configuration
 cd terraform_cluster && \
 printf "Creating cluster...\n" && \
-#terraform init && \
-#terraform apply -auto-approve && \
+terraform init && \
+terraform apply -auto-approve && \
 
 # Update kubeconfig
 aws eks --region eu-central-1 update-kubeconfig --name huba-eks-tf-cluster
